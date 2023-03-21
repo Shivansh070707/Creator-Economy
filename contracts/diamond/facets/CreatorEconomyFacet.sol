@@ -25,10 +25,10 @@ contract CreatorEconomyFacet {
         uint256 tokensBurnt
     );
 
-    function buyCreatorTokens(address creator, uint256 inaTokensDeposited)
-        external
-        returns (uint256)
-    {
+    function buyCreatorTokens(
+        address creator,
+        uint256 inaTokensDeposited
+    ) external returns (uint256) {
         LibDiamond.CreatorEconomyStorage storage c = LibDiamond
             .creatorEconomyStorage();
         if (inaTokensDeposited == 0) {
@@ -91,10 +91,10 @@ contract CreatorEconomyFacet {
 
     // To redeem creator tokens
     // Returns number of INA tokens received for given number of creator tokens to redeem
-    function redeemCreatorTokens(address creator, uint256 creatorTokensToRedeem)
-        external
-        returns (uint256)
-    {
+    function redeemCreatorTokens(
+        address creator,
+        uint256 creatorTokensToRedeem
+    ) external returns (uint256) {
         LibDiamond.CreatorEconomyStorage storage c = LibDiamond
             .creatorEconomyStorage();
         if (creatorTokensToRedeem == 0) {
@@ -151,6 +151,59 @@ contract CreatorEconomyFacet {
         ] -= creatorTokensToRedeem;
         emit CreatorTokensBurnt(msg.sender, creator, creatorTokensToRedeem);
         return inaTokens;
+    }
+
+    function stakeCreatorTokens(
+        address creator,
+        uint256 creatorTokensToStake
+    ) external {
+        LibDiamond.CreatorEconomyStorage storage c = LibDiamond
+            .creatorEconomyStorage();
+        if (creatorTokensToStake == 0) {
+            return;
+        }
+        // first, check if the user has enough creator tokens to stake
+        if (
+            c.creatorToPool[creator].creatorToken.balanceOf(msg.sender) <
+            creatorTokensToStake
+        ) {
+            revert CreatorEconomy__NotEnoughBalance();
+        }
+        // transfer the creator tokens from the user to this contract
+        c.creatorToPool[creator].creatorToken.transferFrom(
+            msg.sender,
+            address(this),
+            creatorTokensToStake
+        );
+        // update the user's balances mapping
+        c.userToBalances[msg.sender][
+            address(c.creatorToPool[creator].creatorToken)
+        ] -= creatorTokensToStake;
+        // update the creatorTokenPool's totalStakedTokens and stakedBalances mapping
+        c.creatorToPool[creator].totalStakedTokens += creatorTokensToStake;
+        c.stakedBalances[creator][msg.sender] += creatorTokensToStake;
+    }
+
+    function withdrawStakedCreatorTokens(address creator) external {
+        LibDiamond.CreatorEconomyStorage storage c = LibDiamond
+            .creatorEconomyStorage();
+        uint256 stakedCreatorTokens = c.stakedBalances[creator][msg.sender];
+        if (stakedCreatorTokens == 0) {
+            return;
+        }
+        // calculate the INA tokens to reward the user with
+        uint256 inaTokensToReward = (stakedCreatorTokens *
+            (c.creatorToPool[creator].INA_REWARD_PER_CREATOR_TOKEN)) / (1e18);
+        // transfer the INA tokens to the user
+        Inani(c.i_inani).transfer(msg.sender, inaTokensToReward);
+        // update the creatorTokenPool's totalStakedTokens and stakedBalances mapping
+        c.creatorToPool[creator].totalStakedTokens -= stakedCreatorTokens;
+        c.stakedBalances[creator][msg.sender] = 0;
+        // transfer the creator tokens back to the user
+        c.creatorToPool[creator].creatorToken.transfer(
+            msg.sender,
+            stakedCreatorTokens
+        );
     }
 
     // To swap creator tokens

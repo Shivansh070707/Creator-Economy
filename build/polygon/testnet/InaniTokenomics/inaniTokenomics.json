@@ -1,0 +1,370 @@
+{
+  "address": "0x7CCbc1Fe547633397bac5204AF52f9FDCb44dA83",
+  "network": {
+    "name": "maticmum",
+    "chainId": 80001
+  },
+  "abi": [
+    {
+      "type": "constructor",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "maxSupply"
+        },
+        {
+          "type": "address",
+          "name": "priceFeedWethToUsd"
+        },
+        {
+          "type": "address",
+          "name": "priceFeedUsdtToUsd"
+        },
+        {
+          "type": "address",
+          "name": "priceFeedMaticToUsd"
+        },
+        {
+          "type": "address",
+          "name": "wethToken"
+        },
+        {
+          "type": "address",
+          "name": "usdtToken"
+        },
+        {
+          "type": "address",
+          "name": "maticToken"
+        },
+        {
+          "type": "address",
+          "name": "inaToken"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "InaniTokenomics_InvalidInvestmentAmount",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InaniTokenomics__AlreadyWhitelistedPrivateSale",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InaniTokenomics__NotEnoughTokensToSell",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InaniTokenomics__NotOwner",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InaniTokenomics__NotWhitelisted",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InaniTokenomics__PrivateSalePeriodExpired",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "InaniTokenomics__SaleNotRunning",
+      "inputs": []
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "InvestorWhitelisted",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "investorPrivateSale",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "PrivateSaleEnded",
+      "inputs": []
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "PrivateSaleStarted",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "tokensOnSell",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "TokensBought",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "investor",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "tokensPurchased",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "MAX_INVESTMENT_USD",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "MIN_INVESTMENT_USD",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "PRIVATE_SALE_PERIOD_BlOCKS",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "PRIVATE_SALE_TOKEN_PRICE_USD",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "buyTokenPrivateSale",
+      "constant": false,
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [
+        {
+          "type": "string",
+          "name": "symbol"
+        },
+        {
+          "type": "uint256",
+          "name": "amount"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "success"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "endPrivateSale",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "success"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getFoundingTeamTokens",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getPrivateSaleStatus",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getTokensToSellInPrivateSale",
+      "constant": true,
+      "stateMutability": "pure",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "i_inaToken",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "i_maxSupply",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "i_owner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "investorsPrivateSale",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "isWhitelisted"
+        },
+        {
+          "type": "uint256",
+          "name": "totalAmountInvested"
+        },
+        {
+          "type": "uint256",
+          "name": "tokensToSend"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "isWhitelistedForPrivateSale",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "investor"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "startPrivateSale",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "success"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "whitelistForPrivateSale",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "investorPrivateSale"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": "success"
+        }
+      ]
+    }
+  ]
+}

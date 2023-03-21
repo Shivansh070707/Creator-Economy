@@ -1,0 +1,237 @@
+{
+  "address": "0xa12e9c83d7c8624776aDd5E7A5e56a6340b65051",
+  "network": {
+    "name": "maticmum",
+    "chainId": 80001
+  },
+  "abi": [
+    {
+      "type": "error",
+      "name": "CreatorEconomy__CanNotExceedSupplyCap",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CreatorEconomy__InvalidTokenAddress",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CreatorEconomy__NotEnoughAllowance",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CreatorEconomy__NotEnoughBalance",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CreatorEconomy__NotEnoughBalanceToSWap",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CreatorEconomy__NotEnoughToRedeem",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CreatorEconomy__SupplyCanNotGoBelowGenesisTokens",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "PRBMath_MulDiv18_Overflow",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "x"
+        },
+        {
+          "type": "uint256",
+          "name": "y"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PRBMath_MulDiv_Overflow",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "x"
+        },
+        {
+          "type": "uint256",
+          "name": "y"
+        },
+        {
+          "type": "uint256",
+          "name": "denominator"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PRBMath_UD60x18_Exp2_InputTooBig",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "x"
+        }
+      ]
+    },
+    {
+      "type": "error",
+      "name": "PRBMath_UD60x18_Log_InputTooSmall",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "x"
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "CreatorTokensBurnt",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "creator",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "tokensBurnt",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "CreatorTokensMinted",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "user",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "creator",
+          "indexed": true
+        },
+        {
+          "type": "uint256",
+          "name": "tokensMinted",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "buyCreatorTokens",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        },
+        {
+          "type": "uint256",
+          "name": "inaTokensDeposited"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "redeemCreatorTokens",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        },
+        {
+          "type": "uint256",
+          "name": "creatorTokensToRedeem"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "stakeCreatorTokens",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        },
+        {
+          "type": "uint256",
+          "name": "creatorTokensToStake"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "swapCreatorTokens",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "swapFrom"
+        },
+        {
+          "type": "uint256",
+          "name": "swapFromAmount"
+        },
+        {
+          "type": "address",
+          "name": "swapTo"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "withdrawStakedCreatorTokens",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}

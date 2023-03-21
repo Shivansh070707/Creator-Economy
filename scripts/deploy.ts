@@ -13,10 +13,12 @@ async function main() {
   );
   const creatorEconomy = await deployCreatorEconomy(
     'creator',
-    ethers.constants.AddressZero,
+    '0x068aeB7f11fb0d5e27BbbDfD07a63B59D0448Da8',
     inani.address
   );
+  return { mocks, inani, inanitokenomics, creatorEconomy };
 }
+//export default main;
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.

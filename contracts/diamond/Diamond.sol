@@ -28,10 +28,10 @@ contract Diamond {
         LibDiamond.setContractOwner(_contractOwner);
         LibDiamond.CreatorEconomyStorage storage c = LibDiamond
             .creatorEconomyStorage();
-        c.SUPPLY_CAP = 210000 * (10**18); // max supply that can be minted for a token
-        c.INITIAL_SUPPLY = 50000 * (10**18); // goes to the creator
+        c.SUPPLY_CAP = 210000 * (10 ** 18); // max supply that can be minted for a token
+        c.INITIAL_SUPPLY = 50000 * (10 ** 18); // goes to the creator
         // UD60x18 private constant RESERVE_RATIO = ud(0.05e18); // in percentage
-        c.INITIAL_LIQUIDITY = 5000 * (10**18);
+        c.INITIAL_LIQUIDITY = 5000 * (10 ** 18);
         c.i_inaniTokenAddress = inaniTokenAddress;
         c.i_inani = inaniTokenAddress;
 

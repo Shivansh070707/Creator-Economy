@@ -1,0 +1,28 @@
+{
+  "address": "0x9D7Af2FC2967cBD41ccc7138306d318dD0256311",
+  "network": {
+    "name": "maticmum",
+    "chainId": 80001
+  },
+  "abi": [
+    {
+      "type": "constructor",
+      "stateMutability": "payable",
+      "payable": true,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_contractOwner"
+        },
+        {
+          "type": "address",
+          "name": "_diamondCutFacet"
+        },
+        {
+          "type": "address",
+          "name": "inaniTokenAddress"
+        }
+      ]
+    }
+  ]
+}

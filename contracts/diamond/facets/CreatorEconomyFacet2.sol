@@ -52,7 +52,9 @@ contract CreatorEconomyFacet2 {
             .CreatorTokenPool(
                 _creatorToken,
                 // 1 * (10 ** 18),
-                c.INITIAL_LIQUIDITY
+                c.INITIAL_LIQUIDITY,
+                0,
+                1 * 10 ** 18
             );
         // update the mapping for creators to their respective pool
         c.creatorToPool[creator] = newCreatorTokenPool;
@@ -68,21 +70,17 @@ contract CreatorEconomyFacet2 {
         return address(c.i_inani);
     }
 
-    function getCreatorTokenAddress(address creator)
-        external
-        view
-        returns (address)
-    {
+    function getCreatorTokenAddress(
+        address creator
+    ) external view returns (address) {
         LibDiamond.CreatorEconomyStorage storage c = LibDiamond
             .creatorEconomyStorage();
         return address(c.creatorToPool[creator].creatorToken);
     }
 
-    function getUserBalanceForCreatorToken(address creator)
-        external
-        view
-        returns (uint256)
-    {
+    function getUserBalanceForCreatorToken(
+        address creator
+    ) external view returns (uint256) {
         LibDiamond.CreatorEconomyStorage storage c = LibDiamond
             .creatorEconomyStorage();
         return c.creatorToPool[creator].creatorToken.balanceOf(msg.sender);

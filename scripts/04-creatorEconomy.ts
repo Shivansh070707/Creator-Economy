@@ -84,6 +84,20 @@ export async function deployCreatorEconomy(
       functionSelectors: selectors.getSelectors(),
     });
   }
+  const diamondCut: DiamondCutFacet = await ethers.getContractAt(
+    'IDiamondCut',
+    diamond.address
+  );
+  const tx = await diamondCut.diamondCut(
+    cut,
+    ethers.constants.AddressZero,
+    '0x'
+  );
+
+  // console.log("Diamond cut tx: ", tx.hash);
+  const receipt = await tx.wait();
+  // console.log("returned status: ", receipt);
+  if (!receipt.status) throw Error(`Diamond upgrade failed: ${tx.hash}`);
 
   let DiamondLoupeFacetData = {
     fileData: fileData[0],

@@ -1,124 +1,207 @@
-import { time, loadFixture } from "@nomicfoundation/hardhat-network-helpers";
-import { anyValue } from "@nomicfoundation/hardhat-chai-matchers/withArgs";
-import { expect } from "chai";
-import { ethers } from "hardhat";
+const { assert, expect } = require('chai');
+const { network, deployments, ethers } = require('hardhat');
+import main from '../scripts/deploy';
+import { deployInani } from '../scripts/01-deploy-inani';
+import { deployCreatorEconomy } from '../scripts/04-creatorEconomy';
+import { CreatorEconomyFacet, CreatorEconomyFacet2 } from '../typechain-types';
 
-describe("Lock", function () {
-  // We define a fixture to reuse the same setup in every test.
-  // We use loadFixture to run this setup once, snapshot that state,
-  // and reset Hardhat Network to that snapshot in every test.
-  async function deployOneYearLockFixture() {
-    const ONE_YEAR_IN_SECS = 365 * 24 * 60 * 60;
-    const ONE_GWEI = 1_000_000_000;
+describe('CreatorEconomy', function () {
+  let data: any;
+  let mocks: any, inani: any, inanitokenomics: any, creatorEconomy: any;
+  let deployer, creator1: any, creator2: any, user1: any;
+  let creatorEconomyFacet2: CreatorEconomyFacet2;
+  let creatorEconomyFacet: CreatorEconomyFacet;
 
-    const lockedAmount = ONE_GWEI;
-    const unlockTime = (await time.latest()) + ONE_YEAR_IN_SECS;
+  before(async () => {
+    const accounts = await ethers.getSigners();
+    deployer = accounts[0];
+    creator1 = accounts[1];
+    creator2 = accounts[2];
+    user1 = accounts[3];
 
-    // Contracts are deployed using the first signer/account by default
-    const [owner, otherAccount] = await ethers.getSigners();
+    inani = await deployInani('xyz');
+    console.log(inani.address);
+    console.log('fghjkdddd', deployer.address);
 
-    const Lock = await ethers.getContractFactory("Lock");
-    const lock = await Lock.deploy(unlockTime, { value: lockedAmount });
-
-    return { lock, unlockTime, lockedAmount, owner, otherAccount };
-  }
-
-  describe("Deployment", function () {
-    it("Should set the right unlockTime", async function () {
-      const { lock, unlockTime } = await loadFixture(deployOneYearLockFixture);
-
-      expect(await lock.unlockTime()).to.equal(unlockTime);
-    });
-
-    it("Should set the right owner", async function () {
-      const { lock, owner } = await loadFixture(deployOneYearLockFixture);
-
-      expect(await lock.owner()).to.equal(owner.address);
-    });
-
-    it("Should receive and store the funds to lock", async function () {
-      const { lock, lockedAmount } = await loadFixture(
-        deployOneYearLockFixture
-      );
-
-      expect(await ethers.provider.getBalance(lock.address)).to.equal(
-        lockedAmount
-      );
-    });
-
-    it("Should fail if the unlockTime is not in the future", async function () {
-      // We don't use the fixture here because we want a different deployment
-      const latestTime = await time.latest();
-      const Lock = await ethers.getContractFactory("Lock");
-      await expect(Lock.deploy(latestTime, { value: 1 })).to.be.revertedWith(
-        "Unlock time should be in the future"
-      );
-    });
+    let creatordata = await deployCreatorEconomy(
+      'xyzs',
+      deployer.address,
+      inani.address
+    );
+    creatorEconomyFacet2 = creatordata.CreatorEconomyFacet2;
   });
 
-  describe("Withdrawals", function () {
-    describe("Validations", function () {
-      it("Should revert with the right error if called too soon", async function () {
-        const { lock } = await loadFixture(deployOneYearLockFixture);
-
-        await expect(lock.withdraw()).to.be.revertedWith(
-          "You can't withdraw yet"
-        );
-      });
-
-      it("Should revert with the right error if called from another account", async function () {
-        const { lock, unlockTime, otherAccount } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        // We can increase the time in Hardhat Network
-        await time.increaseTo(unlockTime);
-
-        // We use lock.connect() to send a transaction from another account
-        await expect(lock.connect(otherAccount).withdraw()).to.be.revertedWith(
-          "You aren't the owner"
-        );
-      });
-
-      it("Shouldn't fail if the unlockTime has arrived and the owner calls it", async function () {
-        const { lock, unlockTime } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        // Transactions are sent using the first signer by default
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw()).not.to.be.reverted;
-      });
-    });
-
-    describe("Events", function () {
-      it("Should emit an event on withdrawals", async function () {
-        const { lock, unlockTime, lockedAmount } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw())
-          .to.emit(lock, "Withdrawal")
-          .withArgs(lockedAmount, anyValue); // We accept any value as `when` arg
-      });
-    });
-
-    describe("Transfers", function () {
-      it("Should transfer the funds to the owner", async function () {
-        const { lock, unlockTime, lockedAmount, owner } = await loadFixture(
-          deployOneYearLockFixture
-        );
-
-        await time.increaseTo(unlockTime);
-
-        await expect(lock.withdraw()).to.changeEtherBalances(
-          [owner, lock],
-          [lockedAmount, -lockedAmount]
-        );
-      });
+  describe('constructor', function () {
+    it('set the INA token contract correctly', async () => {
+      console.log('fghj');
+      const inaAddress = await creatorEconomyFacet2.getInaTokenAddress();
+      console.log(inaAddress);
+      expect(inaAddress).to.equal(inani.address);
     });
   });
+  describe('addCreator', function () {
+    it('creates a new creator token and adds creator to the platform', async () => {
+      // prepare function arguments and mint initial liquidity to creator for testing
+      const initialLiquidityInIna = ethers.utils.parseEther('5000');
+      await inani.mint(creator1.address, initialLiquidityInIna);
+      // approve CreatorEconomy to pull initial liquidity from creator1
+      await inani
+        .connect(creator1)
+        .approve(creatorEconomyFacet2.address, initialLiquidityInIna);
+      const creatorTokenName = 'CTOKEN';
+      const creatorTokenSymbol = 'CTK';
+      await creatorEconomyFacet2.addCreator(
+        creator1.address,
+        creatorTokenName,
+        creatorTokenSymbol
+      );
+      // check if creator has been added with its new creator token and token pool
+      const ctkAddress = await creatorEconomyFacet2.getCreatorTokenAddress(
+        creator1.address
+      );
+      expect(ctkAddress).to.not.equal(ethers.constants.AddressZero);
+    });
+  });
+  // describe('buyCreatorTokens', function () {
+  //   it('user buys creator tokens for given INA tokens', async () => {
+  //     const initialLiquidityInIna = ethers.utils.parseEther('5000');
+  //     await inani.mint(creator1.address, initialLiquidityInIna);
+  //     await inani
+  //       .connect(creator1)
+  //       .approve(creatorEconomy.address, initialLiquidityInIna);
+  //     const creatorTokenName = 'CTOKEN';
+  //     const creatorTokenSymbol = 'CTK';
+  //     await creatorEconomy.addCreator(
+  //       creator1.address,
+  //       creatorTokenName,
+  //       creatorTokenSymbol
+  //     );
+  //     const supplyBeforeBuy = await creatorEconomy.getCurrentSupply(
+  //       creator1.address
+  //     );
+  //     // let user1 buy some tokens of creator1
+  //     const inaTokensToDeposit = ethers.utils.parseEther('500');
+  //     await inani.mint(user1.address, inaTokensToDeposit);
+  //     await inani
+  //       .connect(user1)
+  //       .approve(creatorEconomy.address, inaTokensToDeposit);
+  //     await creatorEconomy
+  //       .connect(user1)
+  //       .buyCreatorTokens(creator1.address, inaTokensToDeposit);
+  //     const supplyAfterBuy = await creatorEconomy.getCurrentSupply(
+  //       creator1.address
+  //     );
+  //     const user1Balance = await creatorEconomy
+  //       .connect(user1)
+  //       .getUserBalanceForCreatorToken(creator1.address);
+  //     assert.equal(
+  //       supplyAfterBuy.sub(supplyBeforeBuy).toString(),
+  //       user1Balance.toString()
+  //     );
+  //   });
+  // });
+  // describe('redeemCreatorTokens', function () {
+  //   it('user redeems creator tokens to get INA tokens', async () => {
+  //     const initialLiquidityInIna = ethers.utils.parseEther('5000');
+  //     await inani.mint(creator1.address, initialLiquidityInIna);
+  //     await inani
+  //       .connect(creator1)
+  //       .approve(creatorEconomy.address, initialLiquidityInIna);
+  //     const creatorTokenName = 'CTOKEN';
+  //     const creatorTokenSymbol = 'CTK';
+  //     await creatorEconomy.addCreator(
+  //       creator1.address,
+  //       creatorTokenName,
+  //       creatorTokenSymbol
+  //     );
+  //     // let user1 first buy some tokens of creator1
+  //     const inaTokensToDeposit = ethers.utils.parseEther('500');
+  //     await inani.mint(user1.address, inaTokensToDeposit);
+  //     await inani
+  //       .connect(user1)
+  //       .approve(creatorEconomy.address, inaTokensToDeposit);
+  //     await creatorEconomy
+  //       .connect(user1)
+  //       .buyCreatorTokens(creator1.address, inaTokensToDeposit);
+  //     const user1Balance = await creatorEconomy
+  //       .connect(user1)
+  //       .getUserBalanceForCreatorToken(creator1.address);
+  //     const tokensToRedeem = user1Balance;
+  //     const supplyBeforeRedeem = await creatorEconomy.getCurrentSupply(
+  //       creator1.address
+  //     );
+  //     // let user1 redeem
+  //     await creatorEconomy
+  //       .connect(user1)
+  //       .redeemCreatorTokens(creator1.address, tokensToRedeem);
+  //     const supplyAfterRedeem = await creatorEconomy.getCurrentSupply(
+  //       creator1.address
+  //     );
+  //     assert.equal(
+  //       supplyBeforeRedeem.sub(supplyAfterRedeem).toString(),
+  //       tokensToRedeem.toString()
+  //     );
+  //   });
+  // });
+  // describe('swapCreatorTokens', function () {
+  //   it("swaps tokens of a creator with another creator's tokens", async () => {
+  //     // add two creators
+  //     const initialLiquidityInIna = ethers.utils.parseEther('5000');
+  //     await inani.mint(creator1.address, initialLiquidityInIna);
+  //     await inani.mint(creator2.address, initialLiquidityInIna);
+  //     await inani
+  //       .connect(creator1)
+  //       .approve(creatorEconomy.address, initialLiquidityInIna);
+  //     await inani
+  //       .connect(creator2)
+  //       .approve(creatorEconomy.address, initialLiquidityInIna);
+  //     await creatorEconomy.addCreator(creator1.address, 'CTOKEN1', 'CTK1');
+  //     await creatorEconomy.addCreator(creator2.address, 'CTOKEN2', 'CTK2');
+  //     // let user1 first buy some tokens of creator1
+  //     const inaTokensToDeposit = ethers.utils.parseEther('500');
+  //     await inani.mint(user1.address, inaTokensToDeposit);
+  //     await inani
+  //       .connect(user1)
+  //       .approve(creatorEconomy.address, inaTokensToDeposit);
+  //     await creatorEconomy
+  //       .connect(user1)
+  //       .buyCreatorTokens(creator1.address, inaTokensToDeposit);
+  //     const user1BalanceCtk1Before = await creatorEconomy
+  //       .connect(user1)
+  //       .getUserBalanceForCreatorToken(creator1.address);
+
+  //     const SwapFromTokensAmount = user1BalanceCtk1Before;
+  //     const supplyCtk1Before = await creatorEconomy.getCurrentSupply(
+  //       creator1.address
+  //     );
+  //     const supplyCtk2Before = await creatorEconomy.getCurrentSupply(
+  //       creator2.address
+  //     );
+  //     // perform swap
+  //     await creatorEconomy
+  //       .connect(user1)
+  //       .swapCreatorTokens(
+  //         await creatorEconomy.getCreatorTokenAddress(creator1.address),
+  //         SwapFromTokensAmount,
+  //         await creatorEconomy.getCreatorTokenAddress(creator2.address)
+  //       );
+  //     const supplyCtk1After = await creatorEconomy.getCurrentSupply(
+  //       creator1.address
+  //     );
+  //     const supplyCtk2After = await creatorEconomy.getCurrentSupply(
+  //       creator2.address
+  //     );
+  //     const user1BalanceCtk2After = await creatorEconomy
+  //       .connect(user1)
+  //       .getUserBalanceForCreatorToken(creator2.address);
+  //     assert.equal(
+  //       supplyCtk1Before.sub(supplyCtk1After).toString(),
+  //       SwapFromTokensAmount.toString()
+  //     );
+  //     assert.equal(
+  //       supplyCtk2After.sub(supplyCtk2Before).toString(),
+  //       user1BalanceCtk2After.toString()
+  //     );
+  //   });
+  // });
 });

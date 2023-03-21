@@ -173,11 +173,12 @@ contract InaniTokenomics {
     }
 
     function buyTokenPrivateSale(string memory symbol, uint256 amount)
-        external
+        external payable
         saleRunning
         onlyWhitelisted(msg.sender)
         satisfyMinMax(symbol, amount)
         periodLeft
+        
         returns (bool success)
     {
         uint256 amountUsd = getEquivalentUsd(symbol, amount);

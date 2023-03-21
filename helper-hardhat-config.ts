@@ -21,7 +21,8 @@ export const networkConfig: any = {
     maticUsdPriceFeedAddress: '0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada',
     wethTokenAddress: '0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa',
     usdtTokenAddress: '0xA02f6adc7926efeBBd59Fd43A84f4E0c0c91e832',
-    maticTokenAddress: '0x0000000000000000000000000000000000001010',
+    maticTokenAddress: '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
+    creatorEconomyFacet: '0x104f351c0461324e8207eEd73a786042a6e89e71',
   },
   // polygon mainnet
   137: {

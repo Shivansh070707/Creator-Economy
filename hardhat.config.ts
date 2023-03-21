@@ -34,7 +34,6 @@ const config: HardhatUserConfig = {
       accounts: [`0x${PRIVATE_KEY}`],
       chainId: 80001,
       saveDeployments: true,
-      gasPrice: 130000000000,
     },
   },
   solidity: {

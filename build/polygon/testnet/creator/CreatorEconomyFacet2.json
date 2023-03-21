@@ -1,0 +1,163 @@
+{
+  "address": "0xA8B270C7C5944007aC9dFb0242Ab4A7051e4a4ef",
+  "network": {
+    "name": "maticmum",
+    "chainId": 80001
+  },
+  "abi": [
+    {
+      "type": "error",
+      "name": "CreatorEconomy__NotEnoughAllowanceForInitialLiquidity",
+      "inputs": []
+    },
+    {
+      "type": "error",
+      "name": "CreatorEconomy__NotEnoughBalanceForInitialLiquidity",
+      "inputs": []
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "CreatorAdded",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "creatorToken",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "addCreator",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        },
+        {
+          "type": "string",
+          "name": "tokenName"
+        },
+        {
+          "type": "string",
+          "name": "tokenSymbol"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "getCreatorTokenAddress",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getCurrentSupply",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getInaTokenAddress",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getUserBalanceForCreatorToken",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "creator"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "initialLiquidity",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "initialSupply",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "supplyCap",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256"
+        }
+      ]
+    }
+  ]
+}

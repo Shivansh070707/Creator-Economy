@@ -1,8 +1,8 @@
 {
-  "address": "0x831C6C334f8DDeE62246a5c81B82c8e18008b38f",
+  "address": "0xC1c8BCe06AfAeAD03fE770A336c31ecc23b952fE",
   "network": {
-    "name": "localhost",
-    "chainId": 31337
+    "name": "maticmum",
+    "chainId": 80001
   },
   "abi": [
     {

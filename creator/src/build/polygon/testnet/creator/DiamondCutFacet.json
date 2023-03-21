@@ -1,0 +1,80 @@
+{
+  "address": "0x6f4B5E4E38E3B6B775C1b26cCCc6713360E34000",
+  "network": {
+    "name": "maticmum",
+    "chainId": 80001
+  },
+  "abi": [
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "DiamondCut",
+      "inputs": [
+        {
+          "type": "tuple[]",
+          "name": "_diamondCut",
+          "indexed": false,
+          "components": [
+            {
+              "type": "address",
+              "name": "facetAddress"
+            },
+            {
+              "type": "uint8",
+              "name": "action"
+            },
+            {
+              "type": "bytes4[]",
+              "name": "functionSelectors"
+            }
+          ]
+        },
+        {
+          "type": "address",
+          "name": "_init",
+          "indexed": false
+        },
+        {
+          "type": "bytes",
+          "name": "_calldata",
+          "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "diamondCut",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "tuple[]",
+          "name": "_diamondCut",
+          "components": [
+            {
+              "type": "address",
+              "name": "facetAddress"
+            },
+            {
+              "type": "uint8",
+              "name": "action"
+            },
+            {
+              "type": "bytes4[]",
+              "name": "functionSelectors"
+            }
+          ]
+        },
+        {
+          "type": "address",
+          "name": "_init"
+        },
+        {
+          "type": "bytes",
+          "name": "_calldata"
+        }
+      ],
+      "outputs": []
+    }
+  ]
+}

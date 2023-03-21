@@ -35,6 +35,8 @@ library LibDiamond {
     struct CreatorTokenPool {
         CreatorToken creatorToken; // currentSupply can be taken from this token contract
         uint256 currentReserves; // in INA
+        uint totalStakedTokens;
+        uint INA_REWARD_PER_CREATOR_TOKEN;
     }
     struct CreatorEconomyStorage {
         address i_inaniTokenAddress;
@@ -45,6 +47,7 @@ library LibDiamond {
         uint256 INITIAL_LIQUIDITY; // in INA
         // mapping the creator to their token pool
         mapping(address => CreatorTokenPool) creatorToPool;
+        mapping(address => mapping(address => uint)) stakedBalances;
         // mapping users to their creator tokens' balances
         mapping(address => mapping(address => uint256)) userToBalances;
         // mapping creator token address to creator address
@@ -176,11 +179,8 @@ library LibDiamond {
                 "LibDiamondCut: Can't add function that already exists"
             );
             ds.facetAddressAndSelectorPosition[
-                    selector
-                ] = FacetAddressAndSelectorPosition(
-                _facetAddress,
-                selectorCount
-            );
+                selector
+            ] = FacetAddressAndSelectorPosition(_facetAddress, selectorCount);
             ds.selectors.push(selector);
             selectorCount++;
         }
@@ -286,9 +286,10 @@ library LibDiamond {
         }
     }
 
-    function initializeDiamondCut(address _init, bytes memory _calldata)
-        internal
-    {
+    function initializeDiamondCut(
+        address _init,
+        bytes memory _calldata
+    ) internal {
         if (_init == address(0)) {
             require(
                 _calldata.length == 0,

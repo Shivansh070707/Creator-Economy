@@ -27,6 +27,12 @@
     "typechain": "^8.1.0"
   },
   "dependencies": {
-    "@prb/math": "^3.1.0"
+    "@prb/math": "^3.1.0",
+    "g": "^2.0.1",
+    "truffle": "^5.8.0"
+  },
+  "scripts": {
+    "start": "npx hardhat run scripts/deploy.ts --network mumbai",
+    "fun": "npx hardhat run scripts/function.ts --network mumbai"
   }
 }
